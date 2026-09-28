@@ -1,0 +1,208 @@
+---
+/**
+ * Her hizmet alanının soyut görsel imzası.
+ *  align  → Kurumsal eğitim: dağınık çizgiler ortak bir hizaya gelir.
+ *  layers → Atölye & kültür-sanat: üst üste binen farklı bakış açıları.
+ *  field  → Etkinlik & organizasyon: bir merkez etrafında katman katman kurulan bütün.
+ * Üst öğeye .is-active eklendiğinde (hover / görünürlük) hareketlenir.
+ */
+import type { Motif } from '../data/content';
+
+interface Props {
+  variant: Motif;
+  class?: string;
+  tone?: 'light' | 'dark';
+}
+const { variant, class: className, tone = 'light' } = Astro.props;
+
+const lines = [
+  { y: 92, len: 210, off: 60 },
+  { y: 128, len: 150, off: -34 },
+  { y: 164, len: 246, off: 22 },
+  { y: 200, len: 120, off: 88 },
+  { y: 236, len: 228, off: -50 },
+  { y: 272, len: 176, off: 40 },
+  { y: 308, len: 96, off: -18 },
+];
+
+const grid: { x: number; y: number; d: number }[] = [];
+for (let r = 0; r < 9; r++) {
+  for (let c = 0; c < 9; c++) {
+    const x = 40 + c * 40;
+    const y = 40 + r * 40;
+    grid.push({ x, y, d: Math.hypot(x - 200, y - 200) });
+  }
+}
+---
+
+<svg
+  class:list={['motif', `motif--${variant}`, `motif--${tone}`, className]}
+  viewBox="0 0 400 400"
+  aria-hidden="true"
+  focusable="false"
+>
+  {
+    variant === 'align' && (
+      <g>
+        {lines.map((l, i) => (
+          <line
+            x1="80"
+            x2={80 + l.len}
+            y1={l.y}
+            y2={l.y}
+            class="m-line"
+            style={`--o:${l.off}px; --i:${i}`}
+          />
+        ))}
+        <circle cx={80 + lines[2].len + 18} cy={lines[2].y} r="9" class="m-dot" style={`--o:${lines[2].off}px`} />
+        <line x1="80" x2="80" y1="70" y2="330" class="m-axis" />
+      </g>
+    )
+  }
+  {
+    variant === 'layers' && (
+      <g>
+        <circle cx="160" cy="176" r="96" class="m-c m-c1" />
+        <circle cx="240" cy="176" r="96" class="m-c m-c2" />
+        <circle cx="200" cy="244" r="96" class="m-c m-c3" />
+        <circle cx="200" cy="199" r="9" class="m-dot" />
+      </g>
+    )
+  }
+  {
+    variant === 'field' && (
+      <g>
+        {grid.map((p) => (
+          <circle cx={p.x} cy={p.y} r="2.2" class="m-grid" style={`--dd:${Math.round(p.d * 3)}ms`} />
+        ))}
+        {[1, 2, 3, 4].map((n) => (
+          <circle cx="200" cy="200" r={n * 38} class="m-ring" style={`--n:${n}`} />
+        ))}
+        <circle cx="200" cy="200" r="11" class="m-dot" />
+      </g>
+    )
+  }
+</svg>
+
+<style>
+  .motif {
+    --stroke: var(--teal);
+    --soft: var(--teal-soft);
+    --accent: var(--bordo);
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .motif--dark {
+    --stroke: var(--paper);
+    --soft: var(--teal-soft);
+    --accent: var(--cream);
+  }
+  .m-dot {
+    fill: var(--accent);
+  }
+
+  /* align */
+  .m-line {
+    stroke: var(--stroke);
+    stroke-width: 2;
+    stroke-linecap: round;
+    transform: translateX(var(--o));
+    transition: transform 1.2s var(--ease-out);
+    transition-delay: calc(var(--i) * 45ms);
+  }
+  .motif--align .m-dot {
+    transform: translateX(var(--o));
+    transition: transform 1.2s var(--ease-out) 90ms;
+  }
+  .m-axis {
+    stroke: var(--accent);
+    stroke-width: 1;
+    stroke-dasharray: 3 5;
+    opacity: 0;
+    transition: opacity 0.8s ease 0.4s;
+  }
+  :global(.is-active) > .motif--align .m-line,
+  :global(.is-active) > .motif--align .m-dot,
+  :global(.is-active) .motif--align .m-line,
+  :global(.is-active) .motif--align .m-dot {
+    transform: none;
+  }
+  :global(.is-active) .motif--align .m-axis {
+    opacity: 1;
+  }
+
+  /* layers */
+  .m-c {
+    fill: none;
+    stroke: var(--stroke);
+    stroke-width: 1.5;
+    transform-origin: 200px 200px;
+    transition: transform 1.4s var(--ease-out);
+  }
+  .m-c2 {
+    stroke: var(--soft);
+    stroke-width: 2;
+  }
+  .m-c3 {
+    stroke: var(--accent);
+  }
+  :global(.is-active) .motif--layers .m-c1 {
+    transform: translate(8px, 5px);
+  }
+  :global(.is-active) .motif--layers .m-c2 {
+    transform: translate(-8px, 5px);
+  }
+  :global(.is-active) .motif--layers .m-c3 {
+    transform: translate(0, -9px);
+  }
+  .motif--layers > g {
+    transform-box: view-box;
+    transform-origin: 200px 200px;
+    animation: m-spin 60s linear infinite;
+    animation-play-state: paused;
+  }
+  :global(.is-active) .motif--layers > g {
+    animation-play-state: running;
+  }
+
+  /* field */
+  .m-grid {
+    fill: var(--soft);
+    transition:
+      opacity 0.6s ease,
+      transform 0.9s var(--ease-out);
+    transition-delay: var(--dd);
+    transform-origin: 200px 200px;
+    transform-box: view-box;
+  }
+  .m-ring {
+    fill: none;
+    stroke: var(--stroke);
+    stroke-width: 1;
+    opacity: 0;
+    transform-origin: 200px 200px;
+    transform: scale(0.6);
+    transition:
+      opacity 0.8s ease,
+      transform 1.2s var(--ease-out);
+    transition-delay: calc(var(--n) * 110ms);
+  }
+  .m-ring[style*='--n:4'] {
+    stroke: var(--accent);
+    stroke-dasharray: 2 6;
+  }
+  :global(.is-active) .motif--field .m-ring {
+    opacity: 0.8;
+    transform: none;
+  }
+  :global(.is-active) .motif--field .m-grid {
+    opacity: 0.35;
+  }
+
+  @keyframes m-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>

@@ -1,0 +1,54 @@
+---
+/**
+ * Başlığı kelimelere bölerek görünür olduğunda kelime kelime yükseltir.
+ * Metin, *yıldız* arasına alınan kelimeleri italik vurgular; sondaki "." bordo noktaya dönüşür.
+ * Ekran okuyucular için tam metin aria-label ile verilir.
+ */
+interface Props {
+  text: string;
+  as?: 'h1' | 'h2' | 'h3' | 'p' | 'span';
+  class?: string;
+  delay?: number;
+  id?: string;
+}
+const { text, as: Tag = 'h2', class: className, delay = 0, id } = Astro.props;
+
+const plain = text.replace(/\*/g, '');
+type Word = { t: string; em: boolean; dot: boolean };
+const words: Word[] = [];
+let inEm = false;
+for (const raw of text.split(/\s+/).filter(Boolean)) {
+  let w = raw;
+  const starts = w.startsWith('*');
+  if (starts) {
+    inEm = true;
+    w = w.slice(1);
+  }
+  let ends = false;
+  // "*kelime*." ya da "*kelime*,"
+  const m = w.match(/^(.*)\*([.,;:!?]?)$/);
+  if (m) {
+    ends = true;
+    w = m[1] + m[2];
+  }
+  const em = inEm;
+  if (ends) inEm = false;
+  const dot = w.endsWith('.') && !w.endsWith('..');
+  words.push({ t: dot ? w.slice(0, -1) : w, em, dot });
+}
+---
+
+<Tag class:list={['split', className]} style={`--d:${delay}`} aria-label={plain} id={id}>
+  {
+    words.map((w, i) => (
+      <>
+      <span class="w" aria-hidden="true">
+        <span style={`--i:${i}`}>
+          {w.em ? <em>{w.t}</em> : w.t}{w.dot && <span class="dot">.</span>}
+        </span>
+      </span>
+      {i < words.length - 1 && ' '}
+      </>
+    ))
+  }
+</Tag>

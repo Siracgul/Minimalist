@@ -1,0 +1,318 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Split from '../components/Split.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Intersection from '../components/Intersection.astro';
+import LogoMark from '../components/LogoMark.astro';
+import { process } from '../data/content';
+import { references, testimonials, team } from '../data/collections';
+
+const principles = [
+  {
+    title: 'Az ama yerinde',
+    text: 'Programı doldurmak için içerik eklemiyoruz. Her oturumun, her molanın, her detayın bir gerekçesi var.',
+  },
+  {
+    title: 'Önce ihtiyaç',
+    text: 'Hazır bir paket önermeden önce dinliyoruz. Doğru çözüm, kurumun kendi sorusundan doğar.',
+  },
+  {
+    title: 'Katılımcı merkezde',
+    text: 'İnsanlar izleyici değil, deneyimin bir parçası. Konuşmaya, etkileşime ve üretmeye her zaman alan bırakıyoruz.',
+  },
+  {
+    title: 'İçerik ve uygulama bir arada',
+    text: 'Ne anlatılacağı ile nasıl hayata geçeceğini ayrı işler olarak görmüyoruz. İkisini aynı özenle, birlikte düşünüyoruz.',
+  },
+];
+
+const collaboration = [
+  { you: 'Gündeminizi, beklentinizi ve katılımcılarınızı anlatırsınız.', we: 'Doğru soruları sorar, ihtiyacı birlikte adlandırırız.' },
+  { you: 'Hedef, bütçe ve zamanlama çerçevesini paylaşırsınız.', we: 'Kapsamı, formatı ve başarı ölçütünü netleştiren bir öneri hazırlarız.' },
+  { you: 'Taslak üzerine görüşlerinizi iletirsiniz.', we: 'İçeriği, akışı ve kişileri belirler; deneyimi ayrıntılarıyla kurgularız.' },
+  { you: 'Kurum içi duyuru ve katılımı desteklersiniz.', we: 'Hazırlıktan kapanışa kadar uygulamayı yürütürüz.' },
+  { you: 'Kendi gözlemlerinizi paylaşırsınız.', we: 'Geri bildirimleri derler, öğrenilenleri ve olası sonraki adımları raporlarız.' },
+];
+---
+
+<BaseLayout
+  title="Yaklaşım"
+  description="Minimalist'in insan, öğrenme, kültür ve buluşma arasındaki kesişimde duran yaklaşımı; ilkeleri ve kurumlarla nasıl çalıştığı."
+>
+  <PageHero
+    eyebrow="Yaklaşım"
+    title="Özen, bizim için *bir yöntem*."
+    lead="Minimalist'te sadelik estetik bir tercihten önce bir çalışma biçimi: gerekeni doğru yerde, doğru ölçüde ve doğru insanlarla yapmak."
+  />
+
+  <section class="section name" aria-labelledby="ad-baslik">
+    <div class="container name__grid">
+      <div class="name__mark" data-reveal aria-hidden="true">
+        <LogoMark decorative class="name__logo" />
+      </div>
+      <div class="name__text">
+        <p class="label eyebrow" data-reveal>Adımız ve noktamız</p>
+        <Split id="ad-baslik" class="h2" text="Neden *Minimalist*?" />
+        <div class="prose muted" data-reveal style="--d:150">
+          <p>
+            Çünkü iyi bir deneyimin eklenenlerden çok ayıklananlarla şekillendiğine inanıyoruz. Bir eğitimde her şeyi
+            anlatmaya çalışmak yerine asıl önemli olanı anlaşılır kılmak; bir buluşmada programı doldurmak yerine
+            insanlara birbirleriyle konuşacak zaman bırakmak.
+          </p>
+          <p>
+            Logomuzdaki nokta da bunu anlatır: bir cümleyi tamamlayan, bir şeyi yerine oturtan küçük ama kararlı bir
+            işaret. İnsanların, fikirlerin ve deneyimlerin buluştuğu yer.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section surface-cream" aria-labelledby="kesisim-baslik">
+    <div class="container">
+      <Intersection />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="ilke-baslik">
+    <div class="container">
+      <div class="section-head">
+        <p class="label eyebrow" data-reveal>İlkelerimiz</p>
+        <Split id="ilke-baslik" class="h2" text="Her işte *aynı dört* soru." />
+        <p class="muted" data-reveal style="--d:150">
+          Konu, ölçek ya da format ne olursa olsun, her projede kendimize bu ilkeler üzerinden bakıyoruz.
+        </p>
+      </div>
+      <ol class="pillars" role="list" style="--cols:4">
+        {
+          principles.map((p, i) => (
+            <li class="pillar" data-reveal style={`--d:${i * 90}`}>
+              <span class="pillar__num num">0{i + 1}</span>
+              <h3>{p.title}</h3>
+              <p class="muted">{p.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section surface-dark on-dark" aria-labelledby="isbirligi-baslik">
+    <div class="container">
+      <div class="section-head">
+        <p class="label eyebrow" data-reveal>İş birliği</p>
+        <Split id="isbirligi-baslik" class="h2" text="Beş adım, *iki taraf*." />
+        <p class="muted" data-reveal style="--d:150">
+          İyi bir sonuç, iki tarafın da neyi üstlendiğini bildiği bir süreçten çıkar. Her adımda sizin ve bizim
+          rolümüz açık.
+        </p>
+      </div>
+
+      <div class="collab" role="table" aria-label="Çalışma adımları ve roller">
+        <div class="collab__row collab__row--head" role="row">
+          <span role="columnheader" class="label">Adım</span>
+          <span role="columnheader" class="label">Sizden</span>
+          <span role="columnheader" class="label">Bizden</span>
+        </div>
+        {
+          process.map((step, i) => (
+            <div class="collab__row" role="row" data-reveal style={`--d:${i * 60}`}>
+              <span role="rowheader" class="collab__step">
+                <span class="num">0{i + 1}</span>
+                <span>
+                  <strong>
+                    {step.title}
+                    <span class="dot">.</span>
+                  </strong>
+                  <span class="collab__sub">{step.subtitle}</span>
+                </span>
+              </span>
+              <span role="cell" class="collab__you">
+                <span class="collab__mobile-label label">Sizden</span>
+                {collaboration[i].you}
+              </span>
+              <span role="cell" class="collab__we">
+                <span class="collab__mobile-label label">Bizden</span>
+                {collaboration[i].we}
+              </span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {
+    team.length > 0 && (
+      <section class="section" aria-labelledby="ekip-baslik">
+        <div class="container">
+          <div class="section-head">
+            <p class="label eyebrow">Ekip</p>
+            <h2 id="ekip-baslik" class="h2">
+              Birlikte <em>çalışacağınız</em> kişiler<span class="dot">.</span>
+            </h2>
+          </div>
+          <ul class="cards" role="list">
+            {team.map((m) => (
+              <li class="card">
+                {m.photo && <img src={m.photo} alt={m.name} loading="lazy" decoding="async" />}
+                <h3>{m.name}</h3>
+                <p class="label card__meta">{m.role}</p>
+                {m.bio && <p class="muted">{m.bio}</p>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    (references.length > 0 || testimonials.length > 0) && (
+      <section class="section surface-cream" aria-labelledby="referans-baslik">
+        <div class="container">
+          <div class="section-head">
+            <p class="label eyebrow">Referanslar</p>
+            <h2 id="referans-baslik" class="h2">
+              Birlikte <em>çalıştıklarımız</em>
+              <span class="dot">.</span>
+            </h2>
+          </div>
+          {references.length > 0 && (
+            <ul class="refs" role="list">
+              {references.map((r) => (
+                <li>
+                  {r.logo ? <img src={r.logo} alt={r.name} loading="lazy" decoding="async" /> : <span>{r.name}</span>}
+                </li>
+              ))}
+            </ul>
+          )}
+          {testimonials.length > 0 && (
+            <ul class="cards" role="list">
+              {testimonials.map((t) => (
+                <li class="card">
+                  <blockquote>“{t.quote}”</blockquote>
+                  <p class="label card__meta">
+                    {t.name}
+                    {t.role && ` · ${t.role}`}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </section>
+    )
+  }
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .name__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+    gap: clamp(2.5rem, 7vw, 8rem);
+    align-items: center;
+  }
+  .name__mark {
+    color: var(--bordo);
+  }
+  .name__mark :global(.name__logo) {
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+  }
+  .name__mark :global(.logo-mark__dot) {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: dot-breathe 4s var(--ease-in-out) infinite;
+  }
+  @keyframes dot-breathe {
+    50% {
+      transform: scale(1.18);
+    }
+  }
+  .name__text {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .collab {
+    display: grid;
+    border-top: 1px solid var(--line-on-dark);
+  }
+  .collab__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1.2fr);
+    gap: 1rem 2.5rem;
+    padding: 1.6rem 0;
+    border-bottom: 1px solid var(--line-on-dark);
+  }
+  .collab__row--head {
+    padding: 1rem 0;
+    color: var(--on-dark-muted);
+  }
+  .collab__step {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+  }
+  .collab__step .num {
+    color: var(--on-dark-muted);
+  }
+  .collab__step strong {
+    display: block;
+    font-family: var(--f-display);
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+  .collab__sub {
+    display: block;
+    color: var(--on-dark-muted);
+    font-size: var(--t-small);
+    margin-top: 0.2rem;
+  }
+  .collab__you {
+    color: var(--on-dark-muted);
+  }
+  .collab__mobile-label {
+    display: none;
+  }
+  .refs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem 3rem;
+    align-items: center;
+    margin-bottom: 3rem;
+  }
+  .refs img {
+    max-height: 48px;
+    width: auto;
+  }
+  @media (max-width: 860px) {
+    .name__grid {
+      grid-template-columns: 1fr;
+    }
+    .name__mark :global(.name__logo) {
+      max-width: 200px;
+    }
+    .collab__row {
+      grid-template-columns: 1fr;
+    }
+    .collab__row--head {
+      display: none;
+    }
+    .collab__mobile-label {
+      display: block;
+      color: var(--teal-soft);
+      margin-bottom: 0.25rem;
+    }
+    .collab__you,
+    .collab__we {
+      padding-left: 2.1rem;
+    }
+  }
+</style>

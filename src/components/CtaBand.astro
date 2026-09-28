@@ -1,0 +1,85 @@
+---
+import Icon from './Icon.astro';
+import LogoMark from './LogoMark.astro';
+
+interface Props {
+  title?: string;
+  text?: string;
+  href?: string;
+  button?: string;
+}
+const {
+  title = 'Aklınızdaki ihtiyaç henüz net değilse de konuşabiliriz.',
+  text = 'Birkaç cümle yeterli. İhtiyacı birlikte adlandırır, size uygun bir çerçeve öneririz.',
+  href = '/iletisim/',
+  button = 'Talep oluştur',
+} = Astro.props;
+---
+
+<section class="cta surface-bordo on-dark" aria-label="İletişim çağrısı">
+  <div class="container cta__grid">
+    <LogoMark decorative class="cta__mark" />
+    <div class="cta__text">
+      <h2 class="h2 cta__title" data-reveal>{title}</h2>
+      <p class="cta__sub" data-reveal style="--d:120">{text}</p>
+    </div>
+    <a href={href} class="btn btn--light cta__btn" data-reveal style="--d:200">
+      {button}
+      <Icon name="arrow" class="btn__icon" />
+    </a>
+  </div>
+</section>
+
+<style>
+  .cta {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(4.5rem, 3rem + 6vw, 8.5rem);
+  }
+  .cta__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2.5rem 4rem;
+    align-items: end;
+  }
+  .cta :global(.cta__mark) {
+    position: absolute;
+    right: -4%;
+    top: 50%;
+    width: min(62vw, 760px);
+    height: auto;
+    transform: translateY(-50%);
+    color: var(--paper);
+    opacity: 0.06;
+    pointer-events: none;
+  }
+  .cta__text {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .cta__title {
+    max-width: 20ch;
+  }
+  .cta__sub {
+    max-width: 48ch;
+    color: rgb(250 248 243 / 0.85);
+    font-size: var(--t-lead);
+    line-height: 1.5;
+  }
+  .cta__btn {
+    --btn-fg: var(--bordo);
+  }
+  .cta__btn::before {
+    background: var(--teal) !important;
+  }
+  @media (max-width: 800px) {
+    .cta__grid {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+    .cta__btn {
+      justify-self: start;
+    }
+  }
+</style>

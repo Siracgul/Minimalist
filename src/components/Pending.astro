@@ -1,0 +1,72 @@
+---
+/**
+ * Henüz paylaşılmamış içerikler için dürüst "hazırlanıyor" notu.
+ * Gerçek içerik eklendiğinde sayfalar bu bileşen yerine listeyi gösterir.
+ */
+import Icon from './Icon.astro';
+
+interface Props {
+  title: string;
+  text: string;
+  cta?: string;
+  href?: string;
+}
+const { title, text, cta = 'Bize yazın', href = '/iletisim/' } = Astro.props;
+---
+
+<div class="pending" data-reveal>
+  <span class="pending__dot" aria-hidden="true"></span>
+  <div>
+    <p class="pending__title">{title}</p>
+    <p class="muted">{text}</p>
+  </div>
+  <a href={href} class="link-arrow">{cta} <Icon name="arrow" /></a>
+</div>
+
+<style>
+  .pending {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 1rem 1.5rem;
+    align-items: center;
+    padding: 1.5rem clamp(1.25rem, 3vw, 2rem);
+    border: 1px dashed var(--line-strong);
+    border-radius: 6px;
+  }
+  .pending__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid var(--bordo);
+    position: relative;
+  }
+  .pending__dot::after {
+    content: '';
+    position: absolute;
+    inset: -1.5px;
+    border-radius: 50%;
+    background: var(--bordo);
+    animation: pending 2.4s var(--ease-in-out) infinite;
+  }
+  @keyframes pending {
+    50% {
+      transform: scale(0);
+    }
+  }
+  .pending__title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  .link-arrow {
+    color: var(--bordo);
+  }
+  @media (max-width: 700px) {
+    .pending {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+    .pending .link-arrow {
+      grid-column: 2;
+      justify-self: start;
+    }
+  }
+</style>

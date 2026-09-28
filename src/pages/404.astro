@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<BaseLayout title="Sayfa bulunamadı" noindex>
+  <section class="nf">
+    <div class="container nf__inner">
+      <p class="label eyebrow">404</p>
+      <h1 class="display">Aradığınız sayfa <em>burada değil</em><span class="dot">.</span></h1>
+      <p class="lead muted">Bağlantı değişmiş ya da kaldırılmış olabilir. Ana sayfadan devam edebilirsiniz.</p>
+      <div class="nf__actions">
+        <a href="/" class="btn">Ana sayfa <Icon name="arrow" class="btn__icon" /></a>
+        <a href="/iletisim/" class="btn btn--ghost">İletişim</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    padding-top: calc(var(--header-h) + 3rem);
+    padding-bottom: 5rem;
+  }
+  .nf__inner {
+    display: grid;
+    gap: 1.75rem;
+    justify-items: start;
+  }
+  .nf .display {
+    max-width: 14ch;
+  }
+  .nf__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+</style>

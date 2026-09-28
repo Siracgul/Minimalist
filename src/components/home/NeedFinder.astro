@@ -1,0 +1,238 @@
+---
+import Split from '../Split.astro';
+import Icon from '../Icon.astro';
+import { needs, services } from '../../data/content';
+
+const byKey = Object.fromEntries(services.map((s) => [s.key, s]));
+const contactHref = (n: (typeof needs)[number]) =>
+  `/iletisim/?ilgi=${n.interests.join(',')}&ihtiyac=${encodeURIComponent(n.quote)}`;
+---
+
+<section class="needs section surface-dark on-dark" aria-labelledby="ihtiyac-baslik">
+  <div class="container">
+    <header class="needs__head">
+      <p class="label eyebrow" data-reveal>Nereden başlamalı?</p>
+      <Split id="ihtiyac-baslik" class="h2" text="Belki siz de *şunu düşünüyorsunuz*." />
+      <p class="muted needs__hint" data-reveal style="--d:200">
+        Bir cümle seçin; o ihtiyaca nasıl yaklaşacağımızı görün.
+      </p>
+    </header>
+
+    <div class="needs__body" data-needs>
+      <div class="needs__list" role="tablist" aria-label="Örnek ihtiyaçlar" aria-orientation="vertical">
+        {
+          needs.map((n, i) => (
+            <button
+              type="button"
+              role="tab"
+              class="need"
+              id={`need-tab-${i}`}
+              aria-controls={`need-panel-${i}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              tabindex={i === 0 ? 0 : -1}
+            >
+              <span class="need__mark" aria-hidden="true">“</span>
+              <span class="need__quote">{n.quote}</span>
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="needs__panels">
+        {
+          needs.map((n, i) => (
+            <div
+              class="need-panel"
+              role="tabpanel"
+              id={`need-panel-${i}`}
+              aria-labelledby={`need-tab-${i}`}
+              data-index={i}
+              tabindex="0"
+            >
+              <p class="label need-panel__label">Nasıl yaklaşırız</p>
+              <p class="need-panel__answer">{n.answer}</p>
+              {n.services.length > 0 && (
+                <ul class="need-panel__services" role="list">
+                  {n.services.map((k) => (
+                    <li>
+                      <a href={byKey[k].href} class="link-arrow">
+                        {byKey[k].title}
+                        <Icon name="arrow" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <a href={contactHref(n)} class="btn need-panel__cta">
+                Bu ihtiyaçla yazın <Icon name="arrow" class="btn__icon" />
+              </a>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .needs__head {
+    display: grid;
+    gap: 1.25rem;
+    margin-bottom: clamp(3rem, 5vw, 4.5rem);
+    max-width: 52rem;
+  }
+  .needs__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 6rem);
+    align-items: start;
+  }
+  .needs__list {
+    display: grid;
+    border-top: 1px solid var(--line-on-dark);
+  }
+  .need {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: 0.5rem;
+    align-items: start;
+    padding: 1.4rem 0.5rem 1.4rem 0;
+    border: 0;
+    border-bottom: 1px solid var(--line-on-dark);
+    background: none;
+    color: var(--on-dark-muted);
+    text-align: left;
+    cursor: pointer;
+    font-family: var(--f-display);
+    font-size: clamp(1.2rem, 1rem + 0.8vw, 1.6rem);
+    font-weight: 360;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    transition: color 0.4s ease;
+  }
+  .need::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    height: 1px;
+    width: 100%;
+    background: var(--cream);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.8s var(--ease-out);
+  }
+  .need:hover {
+    color: var(--paper);
+  }
+  .need[aria-selected='true'] {
+    color: var(--paper);
+  }
+  .need[aria-selected='true']::after {
+    transform: none;
+  }
+  .need__mark {
+    font-size: 2.2em;
+    line-height: 0.8;
+    color: var(--teal-soft);
+    transition: color 0.4s;
+  }
+  .need[aria-selected='true'] .need__mark {
+    color: var(--cream);
+  }
+
+  .needs__panels {
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+  }
+  .need-panel {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+    padding: clamp(1.75rem, 3vw, 2.75rem);
+    border-radius: 6px;
+    background: rgb(250 248 243 / 0.05);
+    border: 1px solid var(--line-on-dark);
+  }
+  :global(.js) .need-panel + .need-panel {
+    margin-top: 0;
+  }
+  .need-panel + .need-panel {
+    margin-top: 1rem;
+  }
+  :global(.js) .need-panel[hidden] {
+    display: none;
+  }
+  :global(.js) .need-panel:not([hidden]) {
+    animation: panel-in 0.7s var(--ease-out);
+  }
+  @keyframes panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+  .need-panel__label {
+    color: var(--teal-soft);
+  }
+  .need-panel__answer {
+    font-size: var(--t-lead);
+    line-height: 1.55;
+  }
+  .need-panel__services {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.75rem;
+  }
+  .need-panel__services a {
+    color: var(--cream);
+  }
+
+  @media (max-width: 900px) {
+    .needs__body {
+      grid-template-columns: 1fr;
+    }
+    .needs__panels {
+      position: static;
+    }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-needs]');
+  if (root) {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
+    const mobile = window.matchMedia('(max-width: 900px)');
+
+    const select = (i: number, focus = false) => {
+      tabs.forEach((t, j) => {
+        t.setAttribute('aria-selected', String(i === j));
+        t.tabIndex = i === j ? 0 : -1;
+      });
+      panels.forEach((p, j) => (p.hidden = i !== j));
+      if (focus) tabs[i].focus();
+    };
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => {
+        select(i);
+        if (mobile.matches) panels[i].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+      tab.addEventListener('keydown', (e) => {
+        const n = tabs.length;
+        let next = -1;
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') next = (i + 1) % n;
+        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') next = (i - 1 + n) % n;
+        if (e.key === 'Home') next = 0;
+        if (e.key === 'End') next = n - 1;
+        if (next >= 0) {
+          e.preventDefault();
+          select(next, true);
+        }
+      });
+    });
+    select(0);
+  }
+</script>

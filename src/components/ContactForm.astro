@@ -1,0 +1,402 @@
+---
+/**
+ * Talep formu.
+ * - src/data/site.ts → form.endpoint doluysa form JSON olarak bu adrese POST edilir;
+ *   yalnızca sunucu başarılı yanıt verirse "iletildi" mesajı gösterilir.
+ * - endpoint boşsa hiçbir yere gönderim yapılmaz; kullanıcıya bu açıkça söylenir ve
+ *   talebini kopyalayabilmesi (ve e-posta tanımlıysa e-postayla iletebilmesi) sağlanır.
+ */
+import Icon from './Icon.astro';
+import { form, contact } from '../data/site';
+import { interests } from '../data/content';
+
+const endpoint = form.endpoint;
+---
+
+<form
+  class="cform"
+  novalidate
+  data-form
+  data-endpoint={endpoint}
+  data-email={contact.email}
+  aria-describedby="form-not"
+>
+  <fieldset class="cform__group">
+    <legend class="label cform__legend"><span class="num">01</span> Neye ihtiyacınız var?</legend>
+    <div class="chips" role="group" aria-label="İlgi alanı">
+      {
+        interests.map((it) => (
+          <label class="chip">
+            <input type="checkbox" name="ilgi" value={it.value} />
+            <span>{it.label}</span>
+          </label>
+        ))
+      }
+    </div>
+
+    <div class="field">
+      <label for="f-ihtiyac">Kısaca ihtiyacınız <span class="req" aria-hidden="true">*</span></label>
+      <textarea
+        id="f-ihtiyac"
+        name="ihtiyac"
+        rows="5"
+        required
+        minlength="10"
+        maxlength="3000"
+        placeholder="Ör. Yeni yöneticilerimiz için birkaç buluşmalık bir gelişim süreci düşünüyoruz…"
+        aria-describedby="e-ihtiyac"></textarea>
+      <p class="field__error" id="e-ihtiyac" hidden>Lütfen ihtiyacınızı birkaç cümleyle yazın.</p>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label for="f-katilimci">Tahmini katılımcı sayısı</label>
+        <select id="f-katilimci" name="katilimci">
+          <option value="">Seçiniz</option>
+          <option>1–15</option>
+          <option>16–40</option>
+          <option>41–100</option>
+          <option>100+</option>
+          <option>Henüz belli değil</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-zaman">Planlanan dönem</label>
+        <input id="f-zaman" name="zaman" type="text" autocomplete="off" placeholder="Ör. Kasım sonu, 2027 ilk çeyrek" />
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="cform__group">
+    <legend class="label cform__legend"><span class="num">02</span> Size nasıl ulaşalım?</legend>
+    <div class="field-row">
+      <div class="field">
+        <label for="f-ad">Ad soyad <span class="req" aria-hidden="true">*</span></label>
+        <input id="f-ad" name="ad" type="text" autocomplete="name" required aria-describedby="e-ad" />
+        <p class="field__error" id="e-ad" hidden>Lütfen adınızı yazın.</p>
+      </div>
+      <div class="field">
+        <label for="f-kurum">Kurum <span class="req" aria-hidden="true">*</span></label>
+        <input id="f-kurum" name="kurum" type="text" autocomplete="organization" required aria-describedby="e-kurum" />
+        <p class="field__error" id="e-kurum" hidden>Lütfen kurumunuzun adını yazın.</p>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="f-eposta">E-posta <span class="req" aria-hidden="true">*</span></label>
+        <input
+          id="f-eposta"
+          name="eposta"
+          type="email"
+          autocomplete="email"
+          inputmode="email"
+          required
+          aria-describedby="e-eposta"
+        />
+        <p class="field__error" id="e-eposta" hidden>Lütfen geçerli bir e-posta adresi yazın.</p>
+      </div>
+      <div class="field">
+        <label for="f-telefon">Telefon <span class="opt">(isteğe bağlı)</span></label>
+        <input id="f-telefon" name="telefon" type="tel" autocomplete="tel" inputmode="tel" />
+      </div>
+    </div>
+
+    <div class="hp" aria-hidden="true">
+      <label for="f-web">Bu alanı boş bırakın</label>
+      <input id="f-web" name="web" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <label class="consent">
+      <input type="checkbox" name="onay" required aria-describedby="e-onay" />
+      <span>
+        Bilgilerimin, talebime dönüş yapılması amacıyla işlenmesini kabul ediyorum.
+        {
+          form.privacyUrl && (
+            <a href={form.privacyUrl} target="_blank" rel="noopener">
+              Aydınlatma metni
+            </a>
+          )
+        }
+      </span>
+    </label>
+    <p class="field__error" id="e-onay" hidden>Devam etmek için onay vermeniz gerekiyor.</p>
+  </fieldset>
+
+  <div class="cform__submit">
+    <button type="submit" class="btn" data-submit>
+      <span data-submit-label>Talebi gönder</span>
+      <Icon name="arrow" class="btn__icon" />
+    </button>
+    <p class="muted cform__note" id="form-not">
+      <span class="req">*</span> ile işaretli alanlar zorunludur.
+    </p>
+  </div>
+
+  <div class="cform__status" data-status role="status" aria-live="polite" tabindex="-1" hidden>
+    <div class="status status--ok" data-state="ok" hidden>
+      <p class="status__title">Talebiniz bize ulaştı<span class="dot">.</span></p>
+      <p>Teşekkür ederiz. İhtiyacınızı inceleyip verdiğiniz iletişim bilgileri üzerinden size dönüş yapacağız.</p>
+    </div>
+    <div class="status status--error" data-state="error" hidden>
+      <p class="status__title">Talebiniz gönderilemedi.</p>
+      <p>
+        Bağlantıda bir sorun oluştu. Lütfen biraz sonra yeniden deneyin. Yazdıklarınız formda duruyor; isterseniz
+        aşağıdan kopyalayabilirsiniz.
+      </p>
+    </div>
+    <div class="status status--offline" data-state="offline" hidden>
+      <p class="status__title">Bu form henüz bir gönderim sistemine bağlı değil.</p>
+      <p>
+        Talebiniz <strong>gönderilmedi</strong>. Yazdıklarınızı kaybetmemeniz için metni kopyalayabilir
+        <span data-mail-hint hidden>ya da e-posta uygulamanızla doğrudan iletebilirsiniz</span>.
+      </p>
+    </div>
+    <div class="status__actions" data-actions hidden>
+      <button type="button" class="btn btn--ghost" data-copy>
+        <Icon name="copy" class="btn__icon" /><span data-copy-label>Talep metnini kopyala</span>
+      </button>
+      <a class="btn btn--ghost" data-mailto hidden><Icon name="mail" class="btn__icon" />E-postayla gönder</a>
+    </div>
+  </div>
+</form>
+
+<style>
+  .cform {
+    display: grid;
+    gap: clamp(2.5rem, 4vw, 3.5rem);
+  }
+  .cform__group {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.5rem;
+    min-width: 0;
+  }
+  .cform__legend {
+    padding: 0;
+    margin-bottom: 1.5rem;
+    color: var(--bordo);
+    display: flex;
+    gap: 0.75rem;
+    align-items: baseline;
+  }
+  .cform__legend .num {
+    color: var(--ink-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .chip {
+    position: relative;
+    cursor: pointer;
+  }
+  .chip input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+  .chip span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0.55rem 1.1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    font-weight: 500;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease,
+      border-color 0.3s ease;
+  }
+  .chip span::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    transition: background-color 0.3s;
+  }
+  .chip:hover span {
+    border-color: var(--ink);
+  }
+  .chip input:checked + span {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: var(--paper);
+  }
+  .chip input:checked + span::before {
+    background: var(--cream);
+    border-color: var(--cream);
+  }
+  .chip input:focus-visible + span {
+    outline: 2px solid var(--bordo);
+    outline-offset: 3px;
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .field {
+    display: grid;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+  .field label {
+    font-size: 0.9rem;
+    font-weight: 560;
+  }
+  .req {
+    color: var(--bordo);
+  }
+  .opt {
+    font-weight: 400;
+    color: var(--ink-muted);
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    min-height: 3.25rem;
+    padding: 0.8rem 0;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--line-strong);
+    border-radius: 0;
+    font-size: 1.05rem;
+    transition: border-color 0.3s ease;
+    appearance: none;
+  }
+  .field textarea {
+    resize: vertical;
+    min-height: 8rem;
+    line-height: 1.55;
+  }
+  .field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230F3D46' stroke-width='1.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0 center;
+    background-size: 18px;
+    padding-right: 1.75rem;
+    cursor: pointer;
+  }
+  .field input::placeholder,
+  .field textarea::placeholder {
+    color: #5b777c;
+  }
+  .field input:hover,
+  .field select:hover,
+  .field textarea:hover {
+    border-color: var(--ink);
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-bottom: 2px solid var(--bordo);
+  }
+  .field input:focus-visible,
+  .field select:focus-visible,
+  .field textarea:focus-visible {
+    outline: none;
+  }
+  .field [aria-invalid='true'] {
+    border-bottom-color: var(--bordo);
+  }
+  .field__error {
+    color: var(--bordo);
+    font-size: var(--t-small);
+    font-weight: 500;
+  }
+
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .consent {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    font-size: 0.95rem;
+    color: var(--ink-muted);
+    cursor: pointer;
+  }
+  .consent input {
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin: 0.15rem 0 0;
+    accent-color: var(--bordo);
+  }
+
+  .cform__submit {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+  }
+  .cform__submit .btn[disabled] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+  .cform__note {
+    font-size: var(--t-small);
+  }
+
+  .cform__status {
+    display: grid;
+    gap: 1.25rem;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border-radius: 6px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+  }
+  .cform__status:focus {
+    outline: none;
+  }
+  .status {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .status__title {
+    font-family: var(--f-display);
+    font-size: 1.5rem;
+    line-height: 1.2;
+  }
+  .status--error .status__title,
+  .status--offline .status__title {
+    color: var(--bordo);
+  }
+  .status__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  [hidden] {
+    display: none !important;
+  }
+
+  @media (max-width: 640px) {
+    .field-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  import { initContactForm } from '../scripts/contact-form';
+  initContactForm();
+</script>

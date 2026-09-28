@@ -1,0 +1,180 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Split from '../components/Split.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Pending from '../components/Pending.astro';
+import Motif from '../components/Motif.astro';
+import { culturalPrograms } from '../data/collections';
+
+const dimensions = [
+  {
+    title: 'Birlikte üretmek',
+    text: 'Ortaya bir şey koymak; bir fikir, bir nesne, bir hikâye. Birlikte üretilen şey, ekiplerin birbirini başka bir yerden tanımasını sağlar.',
+  },
+  {
+    title: 'Farklı bakış açıları',
+    text: 'Aynı konuya bir sanatçının, bir zanaatkârın ya da bir düşünürün gözünden bakmak; alışılmış cevapları yeniden sorgulamak.',
+  },
+  {
+    title: 'Yaratıcı düşünme',
+    text: 'Gündelik iş temposunun dışına çıkıp deneme cesareti kazanmak. Hata yapmanın serbest olduğu, merakın öne çıktığı bir alan.',
+  },
+  {
+    title: 'Kültürel paylaşım',
+    text: 'Bir eseri, bir mekânı ya da bir deneyimi paylaşmak ve onun üzerine konuşmak. Ortak bir hatıra, ortak bir dil kurar.',
+  },
+];
+
+const formats = [
+  {
+    title: 'Atölyeler',
+    text: 'Elin, zihnin ve konuşmanın birlikte çalıştığı uygulamalı oturumlar. Katılımcılar yalnızca dinlemez; dener, üretir, paylaşır.',
+  },
+  {
+    title: 'Söyleşiler',
+    text: 'Alanının içinden gelen konuklarla, merak uyandıran bir konu etrafında samimi, soru-cevaba açık sohbetler.',
+  },
+  {
+    title: 'Kültürel buluşmalar',
+    text: 'Bir sergi, bir gösteri, bir mekân ya da bir eser etrafında kurgulanan; deneyimi paylaşılan bir düşünceye dönüştüren buluşmalar.',
+  },
+];
+---
+
+<BaseLayout
+  title="Atölye & Kültür-Sanat"
+  description="Birlikte üretmeye, farklı bakış açılarına, yaratıcı düşünmeye ve kültürel paylaşıma alan açan kurumsal atölyeler, söyleşiler ve kültürel buluşmalar."
+>
+  <PageHero
+    index="02"
+    eyebrow="Atölye & Kültür-Sanat"
+    title="Birlikte üretmek, *başka türlü* bakmak."
+    lead="Atölyeler, söyleşiler ve kültürel buluşmalar; ekiplerin gündelik iş temposundan bir adım dışarı çıkıp birlikte düşündüğü, ürettiği ve paylaştığı alanlar."
+    motif="layers"
+  />
+
+  <section class="section surface-dark on-dark" aria-labelledby="boyut-baslik">
+    <div class="container">
+      <div class="section-head">
+        <p class="label eyebrow" data-reveal>Neden kültür-sanat</p>
+        <Split id="boyut-baslik" class="h2" text="İş yerinde *görmediğimiz* yanlarımız." />
+        <p class="muted" data-reveal style="--d:150">
+          Kültür ve sanat, insanlara farklı bir yerden bakma imkânı verir. Kurumsal bir bağlamda bu; iletişimi
+          yumuşatan, merakı canlandıran ve ekipleri yakınlaştıran bir deneyime dönüşür.
+        </p>
+      </div>
+      <div class="dims">
+        <div class="dims__visual" data-activate data-activate-view aria-hidden="true">
+          <Motif variant="layers" tone="dark" />
+        </div>
+        <ol class="pillars dims__list" role="list" style="--cols:2">
+          {
+            dimensions.map((d, i) => (
+              <li class="pillar" data-reveal style={`--d:${i * 90}`}>
+                <span class="pillar__num num">0{i + 1}</span>
+                <h3>{d.title}</h3>
+                <p class="muted">{d.text}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="bicim-baslik">
+    <div class="container">
+      <div class="section-head">
+        <p class="label eyebrow" data-reveal>Biçimler</p>
+        <Split id="bicim-baslik" class="h2" text="Üç farklı *buluşma* biçimi." />
+        <p class="muted" data-reveal style="--d:150">
+          Her biri tek başına bir deneyim olabilir; bir eğitimin parçası ya da bir kurumsal etkinliğin kalbi de.
+          İçeriği kurumunuzun gündemine ve katılımcıların ilgisine göre birlikte seçeriz.
+        </p>
+      </div>
+      <ol class="rows formats" role="list">
+        {
+          formats.map((f, i) => (
+            <li data-reveal style={`--d:${i * 70}`}>
+              <span class="num">0{i + 1}</span>
+              <h3>{f.title}</h3>
+              <p>{f.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section surface-cream" aria-labelledby="takvim-baslik">
+    <div class="container">
+      <div class="section-head">
+        <p class="label eyebrow" data-reveal>Takvim</p>
+        <Split id="takvim-baslik" class="h2" text="Kurumunuza özel ya da *açık katılımlı*." />
+        <p class="muted" data-reveal style="--d:150">
+          Atölye ve buluşmaları kurumunuz için özel olarak kurgulayabiliriz. Açık katılımlı programlar kesinleştikçe
+          bu sayfada duyurulacak.
+        </p>
+      </div>
+      {
+        culturalPrograms.length > 0 ? (
+          <ul class="cards" role="list">
+            {culturalPrograms.map((p) => (
+              <li class="card">
+                <p class="label card__meta">
+                  {p.kind}
+                  {p.date && ` · ${p.date}`}
+                </p>
+                <h3>{p.title}</h3>
+                <p class="muted">{p.summary}</p>
+                {p.location && <p class="muted">{p.location}</p>}
+                {p.registrationUrl && (
+                  <a href={p.registrationUrl} class="link-arrow" target="_blank" rel="noopener">
+                    Kayıt
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <Pending
+            title="Açık katılımlı program takvimimiz hazırlanıyor."
+            text="Kurumunuza özel bir atölye, söyleşi ya da kültürel buluşma için şimdiden yazabilirsiniz."
+            cta="Özel program talep edin"
+            href="/iletisim/?ilgi=atolye,kultur"
+          />
+        )
+      }
+    </div>
+  </section>
+
+  <CtaBand
+    title="Ekibinizle birlikte üretmeye ne dersiniz?"
+    text="Aklınızdaki konuyu, katılımcı sayısını ve zamanlamayı paylaşın; size uygun bir atölye ya da buluşma kurgulayalım."
+    href="/iletisim/?ilgi=atolye,kultur"
+  />
+</BaseLayout>
+
+<style>
+  .dims {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: center;
+  }
+  .dims__visual {
+    max-width: 360px;
+  }
+  .formats h3 {
+    font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.6rem);
+  }
+  @media (max-width: 860px) {
+    .dims {
+      grid-template-columns: 1fr;
+    }
+    .dims__visual {
+      max-width: 200px;
+    }
+  }
+</style>

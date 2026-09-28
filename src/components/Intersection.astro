@@ -1,0 +1,255 @@
+---
+/**
+ * İnsan · Öğrenme · Kültür · Buluşma — dört alanın kesişimi.
+ * Butonlarla (fare, dokunma, klavye) her alan ayrı ayrı okunabilir.
+ */
+import { intersection } from '../data/content';
+import Split from './Split.astro';
+
+interface Props {
+  headingId?: string;
+}
+const { headingId = 'kesisim-baslik' } = Astro.props;
+
+// 2x2 düzende üst üste binen daireler
+const pos = [
+  { cx: 170, cy: 170 },
+  { cx: 290, cy: 170 },
+  { cx: 170, cy: 290 },
+  { cx: 290, cy: 290 },
+];
+const labelPos = [
+  { x: 118, y: 124, anchor: 'middle' },
+  { x: 342, y: 124, anchor: 'middle' },
+  { x: 118, y: 344, anchor: 'middle' },
+  { x: 342, y: 344, anchor: 'middle' },
+];
+const centerText = 'Minimalist, bu dördünün kesiştiği noktada durur. Bir eğitim, bir atölye ya da bir organizasyon; her birinde insanı, öğrenmeyi, kültürü ve buluşmayı birlikte düşünür.';
+---
+
+<div class="isect" data-isect>
+  <div class="isect__text">
+    <p class="label eyebrow" data-reveal>Yaklaşımımız</p>
+    <Split id={headingId} class="h2" text="Dört kavram, *bir kesişim noktası*." />
+    <div class="isect__tabs" role="group" aria-label="Kavramlar">
+      {
+        intersection.map((item, i) => (
+          <button type="button" class="isect__tab" data-key={item.key} aria-pressed="false" data-text={item.text}>
+            <span class="num">0{i + 1}</span>
+            {item.title}
+          </button>
+        ))
+      }
+    </div>
+    <div class="isect__panel" aria-live="polite">
+      <p class="isect__title h3" data-isect-title>Kesişim<span class="dot">.</span></p>
+      <p class="isect__desc muted" data-isect-desc data-default={centerText}>{centerText}</p>
+    </div>
+  </div>
+
+  <div class="isect__figure" data-reveal style="--d:150">
+    <svg viewBox="0 0 460 460" aria-hidden="true" focusable="false">
+      {
+        intersection.map((item, i) => (
+          <g class="isect__c" data-key={item.key} style={`--i:${i}`}>
+            <circle cx={pos[i].cx} cy={pos[i].cy} r="120" class="isect__fill" />
+            <circle cx={pos[i].cx} cy={pos[i].cy} r="120" class="isect__ring" />
+            <text x={labelPos[i].x} y={labelPos[i].y} text-anchor={labelPos[i].anchor} class="isect__label">
+              {item.title}
+            </text>
+          </g>
+        ))
+      }
+      <circle cx="230" cy="230" r="34" class="isect__halo"></circle>
+      <circle cx="230" cy="230" r="11" class="isect__dot"></circle>
+    </svg>
+  </div>
+</div>
+
+<style>
+  .isect {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2.5rem, 6vw, 7rem);
+    align-items: center;
+  }
+  .isect__text {
+    display: grid;
+    gap: 1.75rem;
+    align-content: start;
+  }
+  .isect__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .isect__tab {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0.55rem 1.1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: transparent;
+    font-weight: 540;
+    cursor: pointer;
+    transition:
+      background-color 0.35s ease,
+      color 0.35s ease,
+      border-color 0.35s ease;
+  }
+  .isect__tab .num {
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+    transition: color 0.35s;
+  }
+  .isect__tab:hover {
+    border-color: var(--ink);
+  }
+  .isect__tab[aria-pressed='true'] {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: var(--paper);
+  }
+  .isect__tab[aria-pressed='true'] .num {
+    color: var(--on-dark-muted);
+  }
+  .isect__panel {
+    min-height: 9.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+  .isect__desc {
+    margin-top: 0.75rem;
+    max-width: 46ch;
+  }
+
+  .isect__figure svg {
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
+    overflow: visible;
+  }
+  .isect__fill {
+    fill: var(--teal);
+    opacity: 0.04;
+    transition: opacity 0.6s var(--ease-out);
+  }
+  .isect__ring {
+    fill: none;
+    stroke: var(--teal);
+    stroke-width: 1;
+    opacity: 0.55;
+    transition:
+      opacity 0.5s,
+      stroke 0.5s;
+  }
+  .isect__label {
+    font-family: var(--f-display);
+    font-size: 20px;
+    font-style: italic;
+    fill: var(--teal);
+    transition: fill 0.5s;
+  }
+  .isect__c {
+    transform-box: view-box;
+    transform-origin: 230px 230px;
+    transition: transform 1.2s var(--ease-out);
+  }
+    :global(.js) .isect__figure:not(.is-in) .isect__c:nth-child(1) {
+    transform: translate(-40px, -40px);
+  }
+  :global(.js) .isect__figure:not(.is-in) .isect__c:nth-child(2) {
+    transform: translate(40px, -40px);
+  }
+  :global(.js) .isect__figure:not(.is-in) .isect__c:nth-child(3) {
+    transform: translate(-40px, 40px);
+  }
+  :global(.js) .isect__figure:not(.is-in) .isect__c:nth-child(4) {
+    transform: translate(40px, 40px);
+  }
+  .isect__halo {
+    fill: none;
+    stroke: var(--bordo);
+    stroke-width: 1;
+    opacity: 0.4;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: halo 3.6s var(--ease-out) infinite;
+  }
+  .isect__dot {
+    fill: var(--bordo);
+  }
+  @keyframes halo {
+    from {
+      transform: scale(0.35);
+      opacity: 0.6;
+    }
+    to {
+      transform: scale(1.6);
+      opacity: 0;
+    }
+  }
+
+  /* Aktif kavram */
+  .isect[data-active] .isect__ring {
+    opacity: 0.25;
+  }
+  .isect[data-active] .isect__c.is-on .isect__fill {
+    opacity: 0.14;
+  }
+  .isect[data-active] .isect__c.is-on .isect__ring {
+    opacity: 1;
+    stroke: var(--bordo);
+    stroke-width: 1.5;
+  }
+  .isect[data-active] .isect__c.is-on .isect__label {
+    fill: var(--bordo);
+  }
+
+  @media (max-width: 900px) {
+    .isect {
+      grid-template-columns: 1fr;
+    }
+    .isect__figure {
+      order: -1;
+    }
+    .isect__figure svg {
+      max-width: 420px;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-isect]').forEach((root) => {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('.isect__tab'));
+    const groups = Array.from(root.querySelectorAll<SVGGElement>('.isect__c'));
+    const title = root.querySelector<HTMLElement>('[data-isect-title]')!;
+    const desc = root.querySelector<HTMLElement>('[data-isect-desc]')!;
+    const defaultTitle = title.innerHTML;
+    const defaultDesc = desc.dataset.default || '';
+
+    const select = (key: string | null) => {
+      if (key) root.dataset.active = key;
+      else delete root.dataset.active;
+      tabs.forEach((t) => t.setAttribute('aria-pressed', String(t.dataset.key === key)));
+      groups.forEach((g) => g.classList.toggle('is-on', g.dataset.key === key));
+      const tab = tabs.find((t) => t.dataset.key === key);
+      if (tab) {
+        title.innerHTML = `${tab.lastChild?.textContent?.trim() ?? ''}<span class="dot">.</span>`;
+        desc.textContent = tab.dataset.text || '';
+      } else {
+        title.innerHTML = defaultTitle;
+        desc.textContent = defaultDesc;
+      }
+    };
+
+    tabs.forEach((tab) =>
+      tab.addEventListener('click', () => {
+        select(tab.getAttribute('aria-pressed') === 'true' ? null : tab.dataset.key!);
+      }),
+    );
+  });
+</script>

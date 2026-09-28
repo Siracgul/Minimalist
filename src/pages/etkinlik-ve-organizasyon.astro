@@ -1,0 +1,289 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Split from '../components/Split.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { pastProjects } from '../data/collections';
+
+const layers = [
+  {
+    title: 'Amaç',
+    question: 'Bu buluşma neden var?',
+    text: 'Bir kutlama, bir başlangıç, bir teşekkür ya da bir yön değişikliği. Program, mekân ve atmosferle ilgili her karar bu sorunun cevabına bağlanır.',
+  },
+  {
+    title: 'İçerik',
+    question: 'Ne anlatılacak, ne yaşanacak?',
+    text: 'Konuşmalar, oturumlar, atölyeler, kültürel anlar. Programı dolu değil anlamlı olacak şekilde kurgular; her bölümün bir sonrakine nasıl bağlandığını düşünürüz.',
+  },
+  {
+    title: 'Katılımcı deneyimi',
+    question: 'İnsanlar kendini nasıl hissedecek?',
+    text: 'Davetten karşılamaya, oturma düzeninden molaların ritmine kadar katılımcının yolculuğunu tasarlarız. Kimse kendini yalnızca bir izleyici gibi hissetmemeli.',
+  },
+  {
+    title: 'Uygulama',
+    question: 'Her şey nasıl yerli yerinde olacak?',
+    text: 'Mekân, teknik altyapı, zamanlama, tedarikçiler ve sahadaki koordinasyon. Görünmeyen işlerin sorunsuz yürümesi, görünen her şeyin zeminidir.',
+  },
+];
+
+const kinds = [
+  { title: 'Kurum içi buluşmalar ve toplantılar', text: 'Yıllık toplantılar, strateji buluşmaları, bölüm ve ekip toplantıları.' },
+  { title: 'Yıl sonu ve kutlama buluşmaları', text: 'Bir yılı, bir başarıyı ya da bir dönümü anlamlı biçimde işaretlemek için.' },
+  { title: 'Ekip ve liderlik buluşmaları', text: 'Yönetici ekiplerin ya da proje takımlarının birlikte düşünmesi için kurgulanan günler.' },
+  { title: 'Lansman ve paydaş etkinlikleri', text: 'Bir haberi, bir ürünü ya da bir projeyi paylaşmak için özenle kurgulanan buluşmalar.' },
+  { title: 'Kültür-sanat temalı kurumsal etkinlikler', text: 'Bir söyleşi, atölye ya da kültürel deneyimi merkezine alan buluşmalar.' },
+];
+---
+
+<BaseLayout
+  title="Etkinlik & Organizasyon"
+  description="Amacı, içeriği, katılımcı deneyimi ve uygulamasıyla bir bütün olarak düşünülen kurumsal buluşmalar ve organizasyonlar."
+>
+  <PageHero
+    index="03"
+    eyebrow="Etkinlik & Organizasyon"
+    title="Bir buluşmayı *bütün olarak* düşünmek."
+    lead="Kurumsal bir etkinlik yalnızca bir salon, bir program ve bir ikramdan ibaret değil. Neden bir araya gelindiği, ne anlatıldığı, katılımcının ne yaşadığı ve bunların nasıl hayata geçtiği birbirine bağlıdır."
+    motif="field"
+  />
+
+  <section class="section layers" aria-labelledby="katman-baslik" data-layers>
+    <div class="container">
+      <div class="section-head">
+        <p class="label eyebrow" data-reveal>Dört katman</p>
+        <Split id="katman-baslik" class="h2" text="Merkezde amaç, *etrafında* her şey." />
+        <p class="muted" data-reveal style="--d:150">
+          Bu dört katmanı ayrı işler olarak değil, tek bir kurgunun parçaları olarak ele alırız. Birinde verilen
+          karar ötekileri de etkiler.
+        </p>
+      </div>
+
+      <div class="layers__grid">
+        <div class="layers__figure" aria-hidden="true">
+          <svg viewBox="0 0 400 400">
+            {
+              [...layers].reverse().map((l, ri) => {
+                const i = layers.length - 1 - ri;
+                return (
+                  <g class="lr" data-layer={i}>
+                    <circle cx="200" cy="200" r={40 + i * 48} class="lr__disc" />
+                    <text x="200" y={200 - (40 + i * 48) + 22} text-anchor="middle" class="lr__label">
+                      {i === 0 ? '' : l.title}
+                    </text>
+                  </g>
+                );
+              })
+            }
+            <circle cx="200" cy="200" r="10" class="lr__dot"></circle>
+            <text x="200" y="232" text-anchor="middle" class="lr__label lr__label--core">Amaç</text>
+          </svg>
+        </div>
+
+        <ol class="layers__list" role="list">
+          {
+            layers.map((l, i) => (
+              <li class="layer" data-layer-item={i}>
+                <p class="label layer__q">
+                  <span class="num">0{i + 1}</span> {l.question}
+                </p>
+                <h3 class="h3">
+                  {l.title}
+                  <span class="dot">.</span>
+                </h3>
+                <p class="muted">{l.text}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section surface-cream" aria-labelledby="tur-baslik">
+    <div class="container">
+      <div class="section-head">
+        <p class="label eyebrow" data-reveal>Ne tür buluşmalar</p>
+        <Split id="tur-baslik" class="h2" text="Ölçeği değil, *anlamı* önemsiyoruz." />
+        <p class="muted" data-reveal style="--d:150">
+          Birkaç kişilik bir yönetim buluşması da, kalabalık bir kurum etkinliği de aynı özeni hak eder. Aşağıdakiler,
+          birlikte kurgulayabileceğimiz buluşmalardan bazıları.
+        </p>
+      </div>
+      <ol class="rows" role="list">
+        {
+          kinds.map((k, i) => (
+            <li data-reveal style={`--d:${i * 50}`}>
+              <span class="num">0{i + 1}</span>
+              <h3>{k.title}</h3>
+              <p>{k.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  {
+    pastProjects.length > 0 && (
+      <section class="section" aria-labelledby="proje-baslik">
+        <div class="container">
+          <div class="section-head">
+            <p class="label eyebrow">Gerçekleştirdiklerimiz</p>
+            <h2 id="proje-baslik" class="h2">
+              Seçilmiş <em>projeler</em>
+              <span class="dot">.</span>
+            </h2>
+          </div>
+          <ul class="cards" role="list">
+            {pastProjects.map((p) => (
+              <li class="card">
+                {p.image && <img src={p.image} alt={p.imageAlt ?? ''} loading="lazy" decoding="async" />}
+                <p class="label card__meta">{[p.client, p.year].filter(Boolean).join(' · ')}</p>
+                <h3>{p.title}</h3>
+                <p class="muted">{p.summary}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <CtaBand
+    title="Bir buluşma planlıyorsanız, amacından başlayalım."
+    text="Tarih, katılımcı sayısı ve buluşmanın neden yapıldığı hakkında aklınızdakileri paylaşın."
+    href="/iletisim/?ilgi=organizasyon"
+  />
+</BaseLayout>
+
+<style>
+  .layers__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 6vw, 7rem);
+    align-items: start;
+  }
+  .layers__figure {
+    position: sticky;
+    top: calc(var(--header-h) + 3rem);
+  }
+  .layers__figure svg {
+    width: 100%;
+    max-width: 480px;
+    overflow: visible;
+  }
+  .lr__disc {
+    fill: var(--paper);
+    stroke: var(--teal);
+    stroke-width: 1;
+    stroke-opacity: 0.35;
+    transition:
+      fill 0.6s ease,
+      stroke-opacity 0.6s ease;
+  }
+  .lr__label {
+    font-family: var(--f-display);
+    font-style: italic;
+    font-size: 15px;
+    fill: var(--ink-muted);
+    transition: fill 0.6s ease;
+  }
+  .lr__label--core {
+    font-size: 14px;
+  }
+  .lr__dot {
+    fill: var(--bordo);
+  }
+  .lr.is-on .lr__disc {
+    fill: var(--cream);
+    stroke: var(--bordo);
+    stroke-opacity: 1;
+  }
+  .lr.is-on .lr__label {
+    fill: var(--bordo);
+  }
+  .lr.is-within .lr__disc {
+    fill: var(--cream);
+  }
+
+  .layers__list {
+    display: grid;
+    gap: clamp(3rem, 12vh, 8rem);
+    padding-block: clamp(1rem, 8vh, 6rem);
+  }
+  .layer {
+    display: grid;
+    gap: 0.9rem;
+    padding-left: 1.5rem;
+    border-left: 1px solid var(--line-strong);
+    transition:
+      opacity 0.5s ease,
+      border-color 0.5s ease;
+  }
+  :global(.js) .layer {
+    opacity: 0.4;
+  }
+  :global(.js) .layer.is-on {
+    opacity: 1;
+    border-color: var(--bordo);
+  }
+  .layer__q {
+    color: var(--bordo);
+  }
+  .layer__q .num {
+    color: var(--ink-muted);
+    margin-right: 0.35rem;
+  }
+  .layer .muted {
+    max-width: 44ch;
+  }
+
+  @media (max-width: 860px) {
+    .layers__grid {
+      grid-template-columns: 1fr;
+    }
+    .layers__figure {
+      top: calc(var(--header-h) + 0.5rem);
+      z-index: 2;
+      background: var(--paper);
+      padding-block: 0.5rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .layers__figure svg {
+      max-width: 200px;
+      margin-inline: auto;
+    }
+    .layers__list {
+      gap: 3rem;
+      padding-block: 1rem 0;
+    }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-layers]');
+  if (root) {
+    const items = Array.from(root.querySelectorAll<HTMLElement>('[data-layer-item]'));
+    const rings = Array.from(root.querySelectorAll<SVGGElement>('[data-layer]'));
+    const set = (n: number) => {
+      items.forEach((el, i) => el.classList.toggle('is-on', i === n));
+      rings.forEach((g) => {
+        const i = Number(g.dataset.layer);
+        g.classList.toggle('is-on', i === n);
+        g.classList.toggle('is-within', i < n);
+      });
+    };
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) set(Number((e.target as HTMLElement).dataset.layerItem));
+        }
+      },
+      { rootMargin: '-45% 0px -45% 0px' },
+    );
+    items.forEach((el) => io.observe(el));
+    set(0);
+  }
+</script>

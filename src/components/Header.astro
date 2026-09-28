@@ -1,0 +1,338 @@
+---
+import LogoMark from './LogoMark.astro';
+import Icon from './Icon.astro';
+import { nav } from '../data/site';
+
+interface Props {
+  tone?: 'light' | 'dark';
+}
+const { tone = 'light' } = Astro.props;
+const path = Astro.url.pathname;
+const isActive = (href: string) => path.startsWith(href);
+---
+
+<header class="site-header" data-tone={tone} data-header>
+  <div class="site-header__inner container">
+    <a href="/" class="site-header__brand" aria-label="Minimalist — ana sayfa">
+      <LogoMark decorative class="site-header__mark" />
+    </a>
+
+    <nav class="site-nav" aria-label="Ana menü">
+      <ul role="list">
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <a href="/iletisim/" class="btn site-header__cta" aria-current={isActive('/iletisim/') ? 'page' : undefined}>
+      Talep oluştur
+      <Icon name="arrow" class="btn__icon" />
+    </a>
+
+    <button class="menu-toggle" type="button" aria-haspopup="dialog" aria-controls="mobil-menu" data-menu-open>
+      <span class="menu-toggle__label">Menü</span>
+      <span class="menu-toggle__lines" aria-hidden="true"><span></span><span></span></span>
+    </button>
+  </div>
+</header>
+
+<dialog class="menu on-dark" id="mobil-menu" aria-label="Menü" data-menu>
+  <div class="menu__top container">
+    <a href="/" class="site-header__brand" aria-label="Minimalist — ana sayfa">
+      <LogoMark decorative class="site-header__mark" />
+    </a>
+    <button class="menu-toggle is-open" type="button" data-menu-close>
+      <span class="menu-toggle__label">Kapat</span>
+      <span class="menu-toggle__lines" aria-hidden="true"><span></span><span></span></span>
+    </button>
+  </div>
+  <nav class="menu__nav container" aria-label="Mobil menü">
+    <ol role="list">
+      <li style="--i:0">
+        <a href="/" aria-current={path === '/' ? 'page' : undefined}><span class="num">00</span>Ana sayfa</a>
+      </li>
+      {
+        nav.map((item, i) => (
+          <li style={`--i:${i + 1}`}>
+            <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+              <span class="num">{String(i + 1).padStart(2, '0')}</span>
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </nav>
+  <div class="menu__foot container">
+    <p class="muted">Eğitim, atölye ya da organizasyon ihtiyacınızı birkaç cümleyle paylaşın.</p>
+    <a href="/iletisim/" class="btn">Talep oluştur <Icon name="arrow" class="btn__icon" /></a>
+  </div>
+</dialog>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 100;
+    height: var(--header-h);
+    color: var(--ink);
+    transition:
+      transform 0.6s var(--ease-out),
+      background-color 0.4s ease,
+      color 0.4s ease,
+      box-shadow 0.4s ease;
+  }
+  .site-header[data-tone='dark']:not(.is-scrolled) {
+    color: var(--paper);
+  }
+  .site-header.is-scrolled {
+    background: rgb(250 248 243 / 0.86);
+    backdrop-filter: saturate(1.4) blur(14px);
+    -webkit-backdrop-filter: saturate(1.4) blur(14px);
+    box-shadow: 0 1px 0 var(--line);
+  }
+  .site-header.is-hidden {
+    transform: translateY(-100%);
+  }
+  .site-header__inner {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+  .site-header__brand {
+    display: inline-flex;
+    color: var(--bordo);
+    padding: 0.4rem 0;
+    margin-right: auto;
+    transition: opacity 0.3s;
+  }
+  .site-header[data-tone='dark']:not(.is-scrolled) .site-header__brand {
+    color: var(--paper);
+  }
+  .site-header__brand:hover {
+    opacity: 0.75;
+  }
+  .site-header__brand :global(.site-header__mark) {
+    height: 30px;
+    width: 45px;
+  }
+
+  .site-nav ul {
+    display: flex;
+    gap: clamp(1.25rem, 2.2vw, 2.4rem);
+  }
+  .site-nav a {
+    position: relative;
+    display: inline-block;
+    padding: 0.5rem 0;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .site-nav a::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -0.1rem;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--bordo);
+    transform: translateX(-50%) scale(0);
+    transition: transform 0.45s var(--ease-out);
+  }
+  .site-nav a:hover::after,
+  .site-nav a[aria-current='page']::after {
+    transform: translateX(-50%) scale(1);
+  }
+  .site-header[data-tone='dark']:not(.is-scrolled) .site-nav a::after {
+    background: var(--paper);
+  }
+
+  .site-header__cta {
+    min-height: 2.75rem;
+    padding: 0.55rem 1.1rem 0.55rem 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  .menu-toggle {
+    display: none;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 44px;
+    padding: 0 0 0 0.5rem;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 560;
+    color: inherit;
+  }
+  .menu-toggle__lines {
+    position: relative;
+    width: 26px;
+    height: 10px;
+  }
+  .menu-toggle__lines span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform 0.5s var(--ease-out);
+  }
+  .menu-toggle__lines span:first-child {
+    top: 0;
+  }
+  .menu-toggle__lines span:last-child {
+    bottom: 0;
+    width: 65%;
+    left: auto;
+    right: 0;
+  }
+  .menu-toggle.is-open .menu-toggle__lines span:first-child {
+    transform: translateY(4.25px) rotate(45deg);
+  }
+  .menu-toggle.is-open .menu-toggle__lines span:last-child {
+    width: 100%;
+    transform: translateY(-4.25px) rotate(-45deg);
+  }
+
+  @media (max-width: 1080px) {
+    .site-nav,
+    .site-header__cta {
+      display: none;
+    }
+    .menu-toggle {
+      display: inline-flex;
+    }
+  }
+
+  /* Mobil menü */
+  .menu {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    height: 100dvh;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--teal);
+    color: var(--paper);
+    display: none;
+    flex-direction: column;
+    overflow-y: auto;
+    opacity: 0;
+    transition:
+      opacity 0.4s var(--ease-out),
+      display 0.4s allow-discrete,
+      overlay 0.4s allow-discrete;
+  }
+  .menu[open] {
+    display: flex;
+    opacity: 1;
+  }
+  @starting-style {
+    .menu[open] {
+      opacity: 0;
+    }
+  }
+  .menu::backdrop {
+    background: transparent;
+  }
+  .menu .site-header__brand {
+    color: var(--paper);
+  }
+  .menu__top {
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    flex: none;
+  }
+  .menu__nav {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding-block: 2rem;
+  }
+  .menu__nav ol {
+    width: 100%;
+  }
+  .menu__nav li {
+    border-top: 1px solid var(--line-on-dark);
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.7s var(--ease-out),
+      transform 0.8s var(--ease-out);
+    transition-delay: calc(var(--i) * 60ms + 120ms);
+  }
+  .menu__nav li:last-child {
+    border-bottom: 1px solid var(--line-on-dark);
+  }
+  .menu[open] .menu__nav li {
+    opacity: 1;
+    transform: none;
+  }
+  @starting-style {
+    .menu[open] .menu__nav li {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+  }
+  .menu__nav a {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.85rem 0;
+    font-family: var(--f-display);
+    font-size: clamp(1.75rem, 1.2rem + 3.2vw, 2.75rem);
+    font-weight: 350;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    text-decoration: none;
+  }
+  .menu__nav .num {
+    font-size: 0.8rem;
+    font-family: var(--f-sans);
+    letter-spacing: 0.1em;
+    color: var(--on-dark-muted);
+    min-width: 1.75rem;
+  }
+  .menu__nav a[aria-current='page'] {
+    color: var(--cream);
+  }
+  .menu__nav a[aria-current='page']::after {
+    content: '.';
+    margin-left: -1rem;
+    color: var(--teal-soft);
+  }
+  .menu .muted {
+    color: var(--on-dark-muted);
+  }
+  .menu__foot {
+    flex: none;
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
+  .menu__foot p {
+    max-width: 32ch;
+  }
+</style>
+
+<script>
+  import { initHeader } from '../scripts/header';
+  initHeader();
+</script>

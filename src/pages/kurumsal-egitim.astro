@@ -1,0 +1,230 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Split from '../components/Split.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Pending from '../components/Pending.astro';
+import Icon from '../components/Icon.astro';
+import { trainingPrograms } from '../data/collections';
+
+const pillars = [
+  {
+    title: 'İhtiyaca göre içerik',
+    text: 'Hazır bir içeriği kurumunuza uydurmak yerine içeriği kurumunuzun ihtiyacına göre kurarız. Katılımcı profili, sektörün dili ve ekiplerin gündelik gerçekliği tasarımın başlangıç noktasıdır.',
+  },
+  {
+    title: 'Katılımcı etkileşimi',
+    text: 'İnsanlar anlatılanı değil, deneyimlediğini hatırlar. Vaka çalışmaları, küçük grup tartışmaları, canlandırmalar ve üretim anlarıyla katılımcıyı dinleyici olmaktan çıkarırız.',
+  },
+  {
+    title: 'İş hayatıyla bağ',
+    text: 'Her eğitimin sorusu aynı: Pazartesi sabahı ne farklı olacak? Öğrenilenleri iş yerindeki gerçek durumlara bağlar, uygulamaya dönük araçlar ve takip önerileriyle kapanış yaparız.',
+  },
+];
+
+const moments = [
+  { title: 'Yeni kurulan ya da büyüyen ekipler', text: 'Ortak bir çalışma dili ve karşılıklı beklentilerin netleşmesi gerektiğinde.' },
+  { title: 'Yöneticiliğe yeni adım atanlar', text: 'Uzmanlıktan ekip yönetmeye geçişin getirdiği sorular gündeme geldiğinde.' },
+  { title: 'Değişim ve dönüşüm dönemleri', text: 'Yeni bir yapı, süreç ya da strateji insanlara anlaşılır biçimde taşınmak istendiğinde.' },
+  { title: 'İletişim ve iş birliği', text: 'Birimler arasında bilgi akışı, geri bildirim ya da ortak karar alma zorlaştığında.' },
+  { title: 'Uyum ve oryantasyon', text: 'Kuruma yeni katılanların kültürü, işleyişi ve insanları tanıması hızlanmak istendiğinde.' },
+  { title: 'Kurum kültürünü ortak dile dönüştürmek', text: 'Değerlerin duvardaki bir metinden gündelik davranışlara taşınması hedeflendiğinde.' },
+];
+
+const formats = [
+  { title: 'Tek oturum', text: 'Belirli bir konuya odaklanan, yarım ya da tam günlük yoğun bir öğrenme deneyimi.' },
+  { title: 'Program', text: 'Birkaç haftaya yayılan buluşmalar. Her oturum bir öncekinin üzerine kurulur; aradaki sürede öğrenilen sahada denenir.' },
+  { title: 'Eğitim + atölye', text: 'Kavramsal bir çerçeveyi, katılımcıların birlikte ürettiği uygulamalı bir atölyeyle tamamlayan kurgu.' },
+];
+---
+
+<BaseLayout
+  title="Kurumsal Eğitim"
+  description="Kurumun ihtiyacından yola çıkan, katılımcıyı sürece dahil eden ve öğrenilenleri iş hayatına bağlayan kurumsal eğitimler."
+>
+  <PageHero
+    index="01"
+    eyebrow="Kurumsal Eğitim"
+    title="Ertesi gün *işe taşınan* öğrenme."
+    lead="Kurumunuzun gündeminden ve ekibinizin gerçek sorularından yola çıkan eğitimler tasarlıyoruz. Katılımcıyı sürecin içine alan, iş hayatıyla bağı kurulmuş, ölçülü ve uygulanabilir."
+    motif="align"
+  />
+
+  <section class="section" aria-labelledby="ilkeler-baslik">
+    <div class="container">
+      <div class="section-head">
+        <p class="label eyebrow" data-reveal>Nasıl bir eğitim</p>
+        <Split id="ilkeler-baslik" class="h2" text="Üç şeye *birlikte* bakarız." />
+        <p class="muted" data-reveal style="--d:150">
+          İyi bir eğitim; doğru içerik, gerçek katılım ve işe dokunan bir sonuç arasındaki dengeden doğar. Bu üçünden
+          biri eksik kaldığında öğrenme salonda kalır.
+        </p>
+      </div>
+      <ol class="pillars" role="list">
+        {
+          pillars.map((p, i) => (
+            <li class="pillar" data-reveal style={`--d:${i * 100}`}>
+              <span class="pillar__num num">0{i + 1}</span>
+              <h3>{p.title}</h3>
+              <p class="muted">{p.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section surface-cream" aria-labelledby="anlar-baslik">
+    <div class="container">
+      <div class="section-head">
+        <p class="label eyebrow" data-reveal>Hangi anlarda</p>
+        <Split id="anlar-baslik" class="h2" text="Bir eğitimin *gerçekten* işe yaradığı anlar." />
+        <p class="muted" data-reveal style="--d:150">
+          Eğitim ihtiyacı çoğu zaman bir konu başlığı olarak değil, bir durum olarak ortaya çıkar. Biz de işe o
+          durumu anlamakla başlarız.
+        </p>
+      </div>
+      <ol class="rows" role="list">
+        {
+          moments.map((m, i) => (
+            <li data-reveal style={`--d:${i * 50}`}>
+              <span class="num">0{i + 1}</span>
+              <h3>{m.title}</h3>
+              <p>{m.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="bicim-baslik">
+    <div class="container">
+      <div class="section-head">
+        <p class="label eyebrow" data-reveal>Biçim</p>
+        <Split id="bicim-baslik" class="h2" text="Format, *ihtiyaca* göre belirlenir." />
+        <p class="muted" data-reveal style="--d:150">
+          Süre, katılımcı sayısı ve mekân; hedefin ne olduğuna göre şekillenir. Başlangıç noktası her zaman
+          aynıdır: ne değişmesini istiyoruz?
+        </p>
+      </div>
+      <ul class="formats" role="list">
+        {
+          formats.map((f, i) => (
+            <li class="format" data-reveal style={`--d:${i * 100}`}>
+              <span class="format__bar" aria-hidden="true" style={`--n:${i + 1}`}>
+                {Array.from({ length: 3 }, (_, j) => (
+                  <span class:list={[{ on: j <= i }]} />
+                ))}
+              </span>
+              <h3 class="h3">{f.title}</h3>
+              <p class="muted">{f.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="programs">
+        <h2 class="label programs__title">Eğitim programları</h2>
+        {
+          trainingPrograms.length > 0 ? (
+            <ul class="cards" role="list">
+              {trainingPrograms.map((p) => (
+                <li class="card">
+                  {p.format && <p class="label card__meta">{p.format}</p>}
+                  <h3>{p.title}</h3>
+                  <p class="muted">{p.summary}</p>
+                  {p.audience && <p class="muted">Kimler için: {p.audience}</p>}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <Pending
+              title="Program başlıklarımızı yakında burada paylaşacağız."
+              text="Bu arada ihtiyacınızı bize anlatın; kurumunuza özel bir çerçeve önerelim."
+              cta="İhtiyacınızı yazın"
+              href="/iletisim/?ilgi=egitim"
+            />
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section surface-dark on-dark bridge" aria-label="Diğer alanlar">
+    <div class="container bridge__grid">
+      <p class="statement" data-reveal>
+        Bir eğitimi bazen <em>bir atölye</em> tamamlar, bazen <em>bir buluşma</em> taçlandırır<span class="dot">.</span>
+      </p>
+      <div class="bridge__links" data-reveal style="--d:150">
+        <a href="/atolye-ve-kultur-sanat/" class="link-arrow">Atölye & Kültür-Sanat <Icon name="arrow" /></a>
+        <a href="/etkinlik-ve-organizasyon/" class="link-arrow">Etkinlik & Organizasyon <Icon name="arrow" /></a>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    title="Ekibiniz için nasıl bir öğrenme deneyimi düşünüyorsunuz?"
+    text="Konu, katılımcılar ve zamanlama hakkında aklınızdakileri paylaşın; gerisini birlikte netleştirelim."
+    href="/iletisim/?ilgi=egitim"
+  />
+</BaseLayout>
+
+<style>
+  .formats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .format {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+    padding: clamp(1.5rem, 2.5vw, 2.25rem);
+    background: var(--cream);
+    border-radius: 6px;
+  }
+  .format__bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 1rem;
+  }
+  .format__bar span {
+    width: 34px;
+    height: 6px;
+    border-radius: 3px;
+    background: rgb(15 61 70 / 0.15);
+  }
+  .format__bar span.on {
+    background: var(--bordo);
+  }
+  .programs {
+    margin-top: clamp(3.5rem, 6vw, 5.5rem);
+    display: grid;
+    gap: 1.25rem;
+  }
+  .programs__title {
+    color: var(--ink-muted);
+  }
+  .bridge__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: end;
+  }
+  .bridge__links {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+  }
+  .bridge__links a {
+    font-size: 1.1rem;
+    color: var(--cream);
+  }
+  @media (max-width: 860px) {
+    .formats,
+    .bridge__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,85 @@
+---
+import Split from './Split.astro';
+import Motif from './Motif.astro';
+import type { Motif as MotifName } from '../data/content';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  lead: string;
+  motif?: MotifName;
+  index?: string;
+}
+const { eyebrow, title, lead, motif, index } = Astro.props;
+---
+
+<section class="page-hero" aria-labelledby="sayfa-baslik">
+  <div class="container page-hero__grid">
+    <div class="page-hero__text">
+      <p class="label eyebrow" data-reveal>
+        {index && <span class="num page-hero__index">{index}</span>}
+        {eyebrow}
+      </p>
+      <Split as="h1" id="sayfa-baslik" class="display page-hero__title" text={title} delay={120} />
+      <p class="lead muted page-hero__lead" data-reveal style="--d:500">{lead}</p>
+      <slot />
+    </div>
+    {
+      motif && (
+        <div class="page-hero__visual" data-activate data-activate-view data-reveal style="--d:300">
+          <Motif variant={motif} />
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    padding-top: calc(var(--header-h) + clamp(3.5rem, 8vw, 8rem));
+    padding-bottom: clamp(3.5rem, 7vw, 7rem);
+    border-bottom: 1px solid var(--line);
+  }
+  .page-hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 3rem clamp(2rem, 6vw, 6rem);
+    align-items: end;
+  }
+  .page-hero__text {
+    display: grid;
+    gap: clamp(1.5rem, 2.5vw, 2.25rem);
+    justify-items: start;
+  }
+  .page-hero__index {
+    color: var(--ink-muted);
+    margin-right: 0.25rem;
+    letter-spacing: 0.05em;
+  }
+  .page-hero__title {
+    max-width: 15ch;
+  }
+  .page-hero__lead {
+    max-width: 44ch;
+  }
+  .page-hero__visual {
+    width: 100%;
+    max-width: 380px;
+    justify-self: end;
+  }
+  @media (max-width: 860px) {
+    .page-hero__grid {
+      grid-template-columns: 1fr;
+    }
+    .page-hero__visual {
+      order: -1;
+      justify-self: start;
+      max-width: 140px;
+    }
+  }
+</style>
+
+<script>
+  import { initActivate } from '../scripts/activate';
+  initActivate();
+</script>

@@ -1,0 +1,148 @@
+---
+import Split from '../Split.astro';
+import Icon from '../Icon.astro';
+---
+
+<section class="hero" aria-labelledby="hero-baslik">
+  <div class="hero__stage" data-fx="0.74" data-fy="0.42" data-fx-mobile="0.72" data-fy-mobile="0.25">
+    <canvas class="hero__canvas" aria-hidden="true" data-threads></canvas>
+  </div>
+
+  <div class="container hero__content">
+    <p class="label label--serif hero__kicker" data-reveal style="--d:100">Kurumsal Eğitim & Organizasyon</p>
+    <Split
+      as="h1"
+      id="hero-baslik"
+      class="h-hero hero__title"
+      text="Kurumlar için *öğrenme* ve *buluşma* deneyimleri tasarlıyoruz."
+      delay={250}
+    />
+    <div class="hero__foot">
+      <p class="lead hero__lead" data-reveal style="--d:700">
+        Eğitimleri, atölyeleri, kültür-sanat buluşmalarını ve kurumsal organizasyonları aynı özenle ele alıyoruz:
+        ne anlatılacağından kimin nasıl katılacağına, günün ritminden ertesi güne kalana kadar.
+      </p>
+      <div class="hero__actions" data-reveal style="--d:850">
+        <a href="/iletisim/" class="btn">İhtiyacınızı paylaşın <Icon name="arrow" class="btn__icon" /></a>
+        <a href="#alanlar" class="btn btn--ghost">Neler yapıyoruz <Icon name="arrow-down" class="btn__icon" /></a>
+      </div>
+    </div>
+  </div>
+
+  <a href="#yaklasim" class="hero__scroll" aria-label="Aşağı kaydır">
+    <span></span>
+  </a>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: flex-end;
+    padding-top: calc(var(--header-h) + 3rem);
+    padding-bottom: clamp(3rem, 6vw, 5.5rem);
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .hero__stage {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+  .hero__canvas {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    -webkit-mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.3) 0%, rgb(0 0 0 / 0.45) 30%, #000 62%);
+    mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.3) 0%, rgb(0 0 0 / 0.45) 30%, #000 62%);
+    transition: opacity 1.2s ease;
+  }
+  .hero__canvas:global(.is-ready) {
+    opacity: 1;
+  }
+  .hero__content {
+    position: relative;
+  }
+  .hero__kicker {
+    color: var(--bordo);
+    margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
+  }
+  .hero__title {
+    max-width: 17ch;
+  }
+  .hero__foot {
+    margin-top: clamp(2rem, 4vw, 3.5rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 2rem 4rem;
+  }
+  .hero__lead {
+    max-width: 46ch;
+    color: var(--ink-muted);
+    font-size: clamp(1.05rem, 0.98rem + 0.35vw, 1.25rem);
+  }
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .hero__scroll {
+    position: absolute;
+    left: 50%;
+    bottom: 1.25rem;
+    width: 44px;
+    height: 44px;
+    transform: translateX(-50%);
+    display: grid;
+    place-items: center;
+  }
+  .hero__scroll span {
+    width: 1px;
+    height: 28px;
+    background: linear-gradient(var(--ink) 50%, transparent 50%) 0 0 / 1px 200%;
+    animation: scroll-line 2.4s var(--ease-in-out) infinite;
+    opacity: 0.5;
+  }
+  @keyframes scroll-line {
+    from {
+      background-position: 0 100%;
+    }
+    to {
+      background-position: 0 -100%;
+    }
+  }
+
+  @media (max-width: 960px) {
+    .hero__foot {
+      grid-template-columns: 1fr;
+    }
+    .hero__scroll {
+      display: none;
+    }
+  }
+  @media (max-width: 720px) {
+    .hero__canvas {
+      -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 30%, rgb(0 0 0 / 0.25) 55%, rgb(0 0 0 / 0.15) 100%);
+      mask-image: linear-gradient(180deg, #000 0%, #000 30%, rgb(0 0 0 / 0.25) 55%, rgb(0 0 0 / 0.15) 100%);
+    }
+    .hero {
+      min-height: max(100svh, 640px);
+      padding-bottom: 2.5rem;
+    }
+    .hero__title {
+      font-size: clamp(2.6rem, 11.5vw, 4rem);
+    }
+    .hero__actions .btn {
+      flex: 1 1 auto;
+      justify-content: space-between;
+    }
+  }
+</style>
+
+<script>
+  import { initThreads } from '../../scripts/threads';
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-threads]');
+  if (canvas) initThreads(canvas);
+</script>

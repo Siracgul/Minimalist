@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import Manifesto from '../components/home/Manifesto.astro';
+import ServiceIndex from '../components/home/ServiceIndex.astro';
+import Intersection from '../components/Intersection.astro';
+import NeedFinder from '../components/home/NeedFinder.astro';
+import Process from '../components/home/Process.astro';
+import Audience from '../components/home/Audience.astro';
+---
+
+<BaseLayout>
+  <Hero />
+  <Manifesto />
+  <ServiceIndex />
+  <section class="section" aria-labelledby="kesisim-baslik">
+    <div class="container">
+      <Intersection />
+    </div>
+  </section>
+  <NeedFinder />
+  <Process />
+  <Audience />
+</BaseLayout>

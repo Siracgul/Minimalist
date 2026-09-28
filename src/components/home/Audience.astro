@@ -1,0 +1,83 @@
+---
+import Split from '../Split.astro';
+
+const audience = [
+  {
+    who: 'İnsan kaynakları ve eğitim-gelişim ekipleri',
+    need: 'Gelişim planına kurumun gerçek gündemine dokunan, katılımcıların gerçekten dahil olduğu içerikler eklemek isteyenler.',
+  },
+  {
+    who: 'Kurumsal iletişim ve etkinlik sorumluları',
+    need: 'Çalışanları ya da paydaşları, amacı net ve özenle kurgulanmış bir buluşmada bir araya getirmek isteyenler.',
+  },
+  {
+    who: 'Ekip yöneticileri',
+    need: 'Ekibi için bir eğitim, atölye veya buluşma planlayan; bunu kendi gündemine uygun biçimde yapmak isteyenler.',
+  },
+  {
+    who: 'Kültür-sanat odaklı kuruluşlar',
+    need: 'Program ve organizasyonları için içeriği ve uygulamayı birlikte düşünebilecek bir iş ortağı arayanlar.',
+  },
+];
+---
+
+<section class="audience section surface-cream" aria-labelledby="kimler-baslik">
+  <div class="container audience__grid">
+    <div class="audience__head">
+      <p class="label eyebrow" data-reveal>Kimler için</p>
+      <Split id="kimler-baslik" class="h2" text="Ekiplerini *bir araya getirmek* isteyenler için." />
+    </div>
+    <ul class="audience__list" role="list">
+      {
+        audience.map((a, i) => (
+          <li data-reveal style={`--d:${i * 80}`}>
+            <h3 class="audience__who">{a.who}</h3>
+            <p class="muted">{a.need}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .audience__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    gap: clamp(2.5rem, 6vw, 7rem);
+  }
+  .audience__head {
+    display: grid;
+    gap: 1.5rem;
+    align-content: start;
+  }
+  .audience__list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 clamp(1.5rem, 3vw, 3rem);
+  }
+  .audience__list li {
+    padding: 1.75rem 0 2.25rem;
+    border-top: 1px solid var(--line-strong);
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+  }
+  .audience__who {
+    font-family: var(--f-display);
+    font-size: clamp(1.3rem, 1.15rem + 0.5vw, 1.6rem);
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  @media (max-width: 900px) {
+    .audience__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 600px) {
+    .audience__list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

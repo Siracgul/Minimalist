@@ -1,0 +1,192 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { nav, contact, social, site } from '../data/site';
+
+const year = new Date().getFullYear();
+const hasContact = contact.email || contact.phone || contact.address;
+---
+
+<footer class="footer surface-dark on-dark">
+  <div class="container footer__grid">
+    <div class="footer__intro">
+      <p class="footer__statement">
+        Bir eğitim, bir atölye ya da bir buluşma.<br />
+        <em>Konuşarak başlayalım</em><span class="dot">.</span>
+      </p>
+      <a href="/iletisim/" class="btn">İhtiyacınızı paylaşın <Icon name="arrow" class="btn__icon" /></a>
+    </div>
+
+    <nav class="footer__col" aria-label="Alt menü">
+      <p class="label footer__heading">Site</p>
+      <ul role="list">
+        <li><a href="/">Ana sayfa</a></li>
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))
+        }
+        <li><a href="/iletisim/">İletişim</a></li>
+      </ul>
+    </nav>
+
+    <div class="footer__col">
+      <p class="label footer__heading">İletişim</p>
+      {
+        hasContact ? (
+          <ul role="list">
+            {contact.email && (
+              <li>
+                <a href={`mailto:${contact.email}`}>{contact.email}</a>
+              </li>
+            )}
+            {contact.phone && (
+              <li>
+                <a href={`tel:${contact.phone.replace(/[^+\d]/g, '')}`}>{contact.phone}</a>
+              </li>
+            )}
+            {contact.address && (
+              <li>
+                {contact.mapUrl ? (
+                  <a href={contact.mapUrl} target="_blank" rel="noopener">
+                    {contact.address}
+                  </a>
+                ) : (
+                  <address>{contact.address}</address>
+                )}
+              </li>
+            )}
+          </ul>
+        ) : (
+          <ul role="list">
+            <li>
+              <a href="/iletisim/">Talep formu</a>
+            </li>
+          </ul>
+        )
+      }
+      {
+        social.length > 0 && (
+          <ul role="list" class="footer__social">
+            {social.map((s) => (
+              <li>
+                <a href={s.url} target="_blank" rel="noopener">
+                  {s.label}
+                  <Icon name="arrow-up-right" class="footer__ext" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </div>
+
+  <div class="container footer__logo-wrap">
+    <Logo class="footer__logo" />
+  </div>
+
+  <div class="container footer__bottom">
+    <p>© {year} {site.legalName}</p>
+    <a href="#icerik" class="footer__top">Başa dön <Icon name="arrow-up-right" class="footer__ext" /></a>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-top: clamp(4.5rem, 3rem + 6vw, 8rem);
+    overflow: hidden;
+  }
+  .footer__grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr;
+    gap: clamp(2.5rem, 5vw, 5rem);
+    align-items: start;
+  }
+  .footer__intro {
+    display: grid;
+    gap: 2rem;
+    justify-items: start;
+  }
+  .footer__statement {
+    font-family: var(--f-display);
+    font-size: clamp(1.75rem, 1.2rem + 2.2vw, 3rem);
+    font-weight: 350;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    max-width: 18ch;
+  }
+  .footer__statement em {
+    color: var(--cream);
+    font-weight: 330;
+  }
+  .footer__heading {
+    color: var(--on-dark-muted);
+    margin-bottom: 1.25rem;
+  }
+  .footer__col ul {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .footer__col a,
+  .footer__col address {
+    font-style: normal;
+    text-decoration: none;
+    color: var(--paper);
+    transition: color 0.3s;
+  }
+  .footer__col a:hover {
+    color: var(--cream);
+    text-decoration: underline;
+  }
+  .footer__social {
+    margin-top: 1.5rem;
+  }
+  .footer__social a,
+  .footer__top {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  :global(.footer__ext) {
+    width: 0.9em;
+    height: 0.9em;
+  }
+  .footer__logo-wrap {
+    margin-top: clamp(4rem, 8vw, 8rem);
+  }
+  .footer__logo-wrap :global(.footer__logo) {
+    width: min(100%, 520px);
+    height: auto;
+    color: var(--cream);
+  }
+  .footer__bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 3rem;
+    padding-block: 1.75rem;
+    border-top: 1px solid var(--line-on-dark);
+    font-size: var(--t-small);
+    color: var(--on-dark-muted);
+  }
+  .footer__top {
+    color: var(--on-dark-muted);
+    text-decoration: none;
+  }
+  .footer__top:hover {
+    color: var(--paper);
+  }
+
+  @media (max-width: 860px) {
+    .footer__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .footer__intro {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

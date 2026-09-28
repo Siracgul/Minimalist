@@ -1,0 +1,112 @@
+---
+/**
+ * Kaydırdıkça kelime kelime belirginleşen marka metni.
+ * *yıldız* arasındaki kelimeler italik vurgulanır.
+ */
+const text =
+  'Adımız Minimalist; ama bu az yapmayı değil, *özenle seçmeyi* anlatıyor. Bir eğitimde doğru içerik, bir atölyede doğru soru, bir buluşmada doğru an. Gerisini sadeleştiriyoruz; geriye insanlar ve aralarında kurulan *anlam* kalıyor.';
+
+const tokens: { t: string; em: boolean }[] = [];
+let em = false;
+for (let raw of text.split(' ')) {
+  if (raw.startsWith('*')) {
+    em = true;
+    raw = raw.slice(1);
+  }
+  const closes = raw.includes('*');
+  tokens.push({ t: raw.replace('*', ''), em });
+  if (closes) em = false;
+}
+const plain = text.replace(/\*/g, '');
+---
+
+<section class="manifesto section" id="yaklasim" aria-labelledby="manifesto-etiket">
+  <div class="container manifesto__grid">
+    <p class="label eyebrow" id="manifesto-etiket" data-reveal>Neden Minimalist</p>
+    <p class="manifesto__text" data-scrub aria-label={plain}>
+      {
+        tokens.map((tok) => (
+          <>
+            <span aria-hidden="true" class:list={[{ em: tok.em }]}>
+              {tok.t}
+            </span>{' '}
+          </>
+        ))
+      }
+    </p>
+  </div>
+</section>
+
+<style>
+  .manifesto__grid {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 2rem 4rem;
+    align-items: start;
+  }
+  .manifesto__grid .eyebrow {
+    padding-top: 0.9rem;
+  }
+  .manifesto__text {
+    font-family: var(--f-display);
+    font-size: clamp(1.8rem, 1.1rem + 2.9vw, 4rem);
+    font-weight: 350;
+    line-height: 1.14;
+    letter-spacing: -0.022em;
+    text-wrap: pretty;
+  }
+  .manifesto__text span {
+    transition: opacity 0.5s ease, color 0.5s ease;
+  }
+  .manifesto__text .em {
+    font-style: italic;
+    color: var(--bordo);
+  }
+  :global(.js) .manifesto__text span {
+    opacity: 0.16;
+  }
+  :global(.js) .manifesto__text span.lit {
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .manifesto__text span {
+      opacity: 1;
+    }
+  }
+  @media (max-width: 860px) {
+    .manifesto__grid {
+      grid-template-columns: 1fr;
+    }
+    .manifesto__grid .eyebrow {
+      padding-top: 0;
+    }
+  }
+</style>
+
+<script>
+  const el = document.querySelector<HTMLElement>('[data-scrub]');
+  if (el) {
+    const words = Array.from(el.querySelectorAll('span'));
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      // Metnin üstü ekranın %85'indeyken başla, altı %45'ine geldiğinde bitir
+      const startY = vh * 0.85;
+      const endY = vh * 0.45;
+      const progress = (startY - r.top) / (startY - endY + r.height);
+      const n = Math.round(Math.min(1, Math.max(0, progress)) * words.length);
+      words.forEach((w, i) => w.classList.toggle('lit', i < n));
+    };
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!raf) raf = requestAnimationFrame(update);
+      },
+      { passive: true },
+    );
+    window.addEventListener('resize', update);
+    update();
+  }
+</script>

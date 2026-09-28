@@ -1,0 +1,164 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Split from '../components/Split.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { contact, social } from '../data/site';
+
+const steps = [
+  { title: 'Talebinizi okuruz', text: 'Paylaştığınız bilgileri inceler, gerekirse birkaç soruyla netleştiririz.' },
+  { title: 'Kısa bir ön görüşme', text: 'İhtiyacınızı, beklentilerinizi ve koşulları birlikte konuşuruz.' },
+  { title: 'Size özel bir çerçeve', text: 'Konuştuklarımızdan yola çıkarak kapsamı ve formatı içeren bir öneri hazırlarız.' },
+];
+const hasDirect = contact.email || contact.phone || contact.address || social.length > 0;
+---
+
+<BaseLayout
+  title="İletişim"
+  description="Kurumsal eğitim, atölye, kültür-sanat buluşması ya da organizasyon ihtiyacınızı Minimalist ile paylaşın."
+>
+  <section class="contact" aria-labelledby="sayfa-baslik">
+    <div class="container contact__grid">
+      <aside class="contact__aside">
+        <p class="label eyebrow" data-reveal>İletişim</p>
+        <Split as="h1" id="sayfa-baslik" class="display" text="İhtiyacınızı *anlatın*." delay={100} />
+        <p class="lead muted" data-reveal style="--d:400">
+          Birkaç temel bilgi yeterli. Her şey henüz net değilse sorun değil; ilk görüşmede birlikte netleştiririz.
+        </p>
+
+        <div class="next" data-reveal style="--d:500">
+          <p class="label next__title">Sonra ne olur?</p>
+          <ol role="list">
+            {
+              steps.map((s, i) => (
+                <li>
+                  <span class="num">0{i + 1}</span>
+                  <div>
+                    <strong>{s.title}</strong>
+                    <p class="muted">{s.text}</p>
+                  </div>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+
+        {
+          hasDirect && (
+            <div class="direct" data-reveal style="--d:600">
+              <p class="label next__title">Doğrudan ulaşın</p>
+              <ul role="list">
+                {contact.email && (
+                  <li>
+                    <a href={`mailto:${contact.email}`}>{contact.email}</a>
+                  </li>
+                )}
+                {contact.phone && (
+                  <li>
+                    <a href={`tel:${contact.phone.replace(/[^+\d]/g, '')}`}>{contact.phone}</a>
+                  </li>
+                )}
+                {contact.address && (
+                  <li>
+                    <address>{contact.address}</address>
+                  </li>
+                )}
+                {social.map((s) => (
+                  <li>
+                    <a href={s.url} target="_blank" rel="noopener">
+                      {s.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      </aside>
+
+      <div class="contact__form" data-reveal style="--d:250">
+        <ContactForm />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact {
+    padding-top: calc(var(--header-h) + clamp(3rem, 7vw, 7rem));
+    padding-bottom: var(--section);
+  }
+  .contact__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+    gap: clamp(3rem, 7vw, 8rem);
+    align-items: start;
+  }
+  .contact__aside {
+    display: grid;
+    gap: 1.75rem;
+    align-content: start;
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+  }
+  .next {
+    margin-top: 1.5rem;
+  }
+  .next__title {
+    color: var(--ink-muted);
+    margin-bottom: 1rem;
+  }
+  .next ol {
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .next li {
+    display: grid;
+    grid-template-columns: 2.25rem 1fr;
+    gap: 0.5rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .next .num {
+    color: var(--bordo);
+    font-size: 0.95rem;
+  }
+  .next strong {
+    font-weight: 600;
+  }
+  .next p {
+    font-size: 0.95rem;
+    margin-top: 0.2rem;
+  }
+  .direct ul {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .direct a,
+  .direct address {
+    font-style: normal;
+    font-size: 1.1rem;
+  }
+  .contact__form {
+    padding: clamp(1.5rem, 4vw, 3.5rem);
+    background: var(--cream);
+    border-radius: 8px;
+  }
+  @media (max-width: 960px) {
+    .contact__grid {
+      grid-template-columns: 1fr;
+    }
+    .contact__aside {
+      position: static;
+    }
+    .next {
+      order: 3;
+    }
+  }
+  @media (max-width: 520px) {
+    .contact__form {
+      margin-inline: calc(var(--gutter) * -1);
+      border-radius: 0;
+    }
+  }
+</style>
